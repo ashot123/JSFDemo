@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<div align="center">
+    <br/>
+    <h:outputText value="Update employee" styleClass="contentsTitle"/>
+    <f:event listener="#{backingEditEmployee.init()}" type="preRenderView"/>
+    <br/><br/>
+    <h:form>
+        <h:panelGrid columns="2">
+            Id:
+            <h:outputText value="#{backingEditEmployee.employee.id}"/>
+
+            First name:
+            <h:inputText id="firstName" value="#{backingEditEmployee.employee.firstName}"
+                         required="true"
+                         requiredMessage="'First name' cannot be empty"/>
+
+            Last name:
+            <h:inputText value="#{backingEditEmployee.employee.lastName}"
+                         required="true"
+                         requiredMessage="'Last name' cannot be empty"/>
+
+            Company:
+            <h:selectOneMenu id="subscriptions"
+                             value="#{backingEditEmployee.employee.company}">
+                <f:selectItems value="#{backingEditEmployee.companiesList}"
+                               var="company"
+                               itemValue="#{company.name}"
+                               itemLabel="#{company.name}"/>
+            </h:selectOneMenu>
+
+            Employee number:
+            <h:inputText
+                    id="emplNumber"
+                    value="#{backingEditEmployee.employee.emplNumber}"
+                    validatorMessage="Employee number must be of 5 chars">
+            </h:inputText>
+
+            Salary (€):
+            <h:inputText id="salary" value="#{backingEditEmployee.employee.salary}"/>
+
+        </h:panelGrid>
+
+        <div align="center">
+            <h:message for="emplNumber" style="color:red"/>
+            <h:message for="firstName" style="color:red"/>
+            <h:message for="salary" style="color:red"/>
+            <br/>
+            <h:commandButton value="Cancel" immediate="true" action="employees"/>
+
+            <h:commandButton value="Update" style="margin-left:5px" action="#{backingEditEmployee.updateEmployee()}"/>
+        </div>
+
+    </h:form>
+</div>
+</html>

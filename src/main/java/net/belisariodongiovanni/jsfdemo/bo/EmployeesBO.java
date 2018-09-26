@@ -187,4 +187,77 @@ public class EmployeesBO {
         }//end try
 
     }
+
+    public long updateEmployee(Employee employee) {
+        Connection conn = null;
+        PreparedStatement preparedStatement = null;
+        String sql;
+
+        //STEP 2: Register JDBC driver
+        try {
+            Class.forName(JDBC_DRIVER);
+
+            //STEP 3: Open a connection
+            System.out.println("updateEmployee(): Connecting to database...");
+            conn = DriverManager.getConnection(DB_URL, USER, PASS);//getConnection(DB_URL,USER,PASS);
+
+            sql = "UPDATE EMPLOYEES" +
+                    " SET first_name=?, last_name=?, company=?, empl_number=?, salary=?"
+                    + "WHERE id=?";
+
+
+            //STEP 4: Create a prepared statement
+            System.out.println("Creating prepared statement...");
+            preparedStatement = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+
+            preparedStatement.setString(1, employee.getFirstName());
+            preparedStatement.setString(2, employee.getLastName());
+            preparedStatement.setString(3, employee.getCompany());
+            preparedStatement.setString(4, employee.getEmplNumber());
+            preparedStatement.setDouble(5, employee.getSalary());
+            preparedStatement.setLong(6, employee.getId());
+
+            // execute insert SQL statement
+            Integer affectedRows = preparedStatement.executeUpdate();
+
+            Long idNewRow;
+            if (affectedRows == 0) {
+                throw new SQLException("Updating row failed, no rows affected.");
+            }
+
+            try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    idNewRow = generatedKeys.getLong(1);
+                    System.out.println("Id of new object: " + idNewRow);
+                } else {
+                    throw new SQLException("Updating row failed, no ID obtained.");
+                }
+            }
+
+            preparedStatement.close();
+            conn.close();
+            return idNewRow;
+
+        } catch (ClassNotFoundException | SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            System.out.println("Error updating row in EMPLOYEES table!!");
+            return 0;
+        } finally {
+            //finally block used to close resources
+            try {
+                if (preparedStatement != null)
+                    preparedStatement.close();
+            } catch (SQLException se2) {
+            }// nothing we can do
+            try {
+                if (conn != null)
+                    conn.close();
+            } catch (SQLException se) {
+                se.printStackTrace();
+            }//end finally try
+        }//end try
+
+    }
+
 }
