@@ -10,12 +10,13 @@ import java.util.List;
 @ManagedBean(name = "backingEmployees")
 @SessionScoped
 public class BackingEmployees {
-
-
+    EmployeesBO employeesBO = new EmployeesBO();
 
     public List<Employee> findAllEmployees() {
-        EmployeesBO employeesBO = new EmployeesBO();
         return employeesBO.findAllEmployees();
     }
 
+    public void delete(Employee employee) {
+        employeesBO.deleteEmployee(employee);
+    }
 }
